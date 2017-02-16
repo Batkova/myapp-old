@@ -11,7 +11,7 @@ var html_text = '<!DOCTYPE html>\n' +
             '</body>\n' +
             '</html>\n';
 			
-		var html_text2 = '<\/style> \n' +
+var html_text2 = '<\/style> \n' +
 			'</head> \n' +
             '<body>\n' +
 			'<div class="block" >\n' +
@@ -20,7 +20,7 @@ var html_text = '<!DOCTYPE html>\n' +
             '</body>\n' +
             '</html>';
 			
-		var styles ='html, body {\n' +
+var styles ='html, body {\n' +
 							'margin: 0; \n' +
 							'padding: 0; \n' +
 					'}\n' +
@@ -31,20 +31,20 @@ var html_text = '<!DOCTYPE html>\n' +
 						'border: 1px solid black;\n' +
 					'}';
 			
-	var sample_frame = document.getElementById('sample-frame');
-	var sample_doc = sample_frame.contentDocument || sample_frame.contentWindow.document;
-	sample_doc.open();
-	sample_doc.write(html_text +  "<style>" + styles + "<\/style>");
-	sample_doc.close();
+var sample_frame = document.getElementById('sample-frame');
+var sample_doc = sample_frame.contentDocument || sample_frame.contentWindow.document;
+sample_doc.open();
+sample_doc.write(html_text +  "<style>" + styles + "<\/style>");
+sample_doc.close();
 		
 		
-	//заблокированный HTML код	
-	var htm = document.getElementById("editorH");
-    var htmEditor = ace.edit(htm);
-    htmEditor.getSession().setMode("ace/mode/html");
-    htmEditor.setTheme("ace/theme/dawn"); 
-	htmEditor.setReadOnly(true);
-    htmEditor.setValue(
+//заблокированный HTML код	
+var htm = document.getElementById("editorH");
+var htmEditor = ace.edit(htm);
+htmEditor.getSession().setMode("ace/mode/html");
+htmEditor.setTheme("ace/theme/dawn");
+htmEditor.setReadOnly(true);
+htmEditor.setValue(
 			'<!DOCTYPE html>\n' +
             '<html>\n' +
 			'<head>\n' +
@@ -57,66 +57,94 @@ var html_text = '<!DOCTYPE html>\n' +
             '</body>\n' +
             '</html>'	);
 		
-			
-	var x ="result1-frame";
-	mask(x);
-	var doc = move(x);
+
+		
+
+//var ed = ace.edit(container);		
+var queue = 1;
+turnchange(queue);
+mask(queue);
+
+//вывод ранее введенного кода
+//ed.getValue();
+
+var doc = move(queue);
 		
 		
-		
-		//создаем редактор Ace
-		var container = document.getElementById("editor"); 
-		var editor = ace.edit(container); 
-		editor.setTheme("ace/theme/dawn"); 
-		editor.getSession().setMode("ace/mode/html"); 
-		
-		
-		//смена цифры - шапка
-		function turnchange(t){
-			if (change == 1) {
-				if (t == 0) {
-					t=1;
-					whogoesnow = "Ход: Игрок " + 1;	
-				}
-				else {
-					t == 0;
-					whogoesnow = "Ход: Игрок " + 2;	
-				}
-			}
-				else {
-				t=t;
-				}
-			change = 1;
-			return(t);		
+//объявление хода - шапка
+function turnchange(t){
+	if (t == 1) {
+		document.getElementById("turn").innerHTML="Ход: Игрок " + t.toString();
+		console.log(t);
+		}
+	else {
+		document.getElementById("turn").innerHTML="Ход: Игрок " + t.toString();	
+		console.log(t);
 		}
 		
+}
 		
 		
-		//маска для ожидающего
-		function mask(result) {
-			if (result == "result1-frame") {
-				result = "result2-frame";
-			} else {
-				result = "result1-frame";
-			}
-			document.getElementById(result).style.backgroundColor ='#778899';
-		}
-		
+//маска для ожидающего
+function mask(t) {
+	var activ_result, inactiv_result;
+	if (t == 1) {
+		activ_result = "result1-frame";
+		inactiv_result = "result2-frame";
+		} else {
+		activ_result = "result2-frame";
+		inactiv_result = "result1-frame";
+	}
+	document.getElementById(inactiv_result).style.backgroundColor ='#778899';
+	document.getElementById(activ_result).style.backgroundColor ='#C0C0C0';
+}
+		var code;
 		//ходы игроков  
-    function move(resframe){  
+    function move(t){ 
 		var container = document.getElementById("editor"); 
 		var editor = ace.edit(container); 
 		editor.setTheme("ace/theme/dawn"); 
 		editor.getSession().setMode("ace/mode/html"); 
 		
-		var iframe = document.getElementById(resframe); 
+		/* var input = document.getElementById("save_code");
+		editor.getSession().on("change", function () {
+			input.setValue(editor.getSession().getValue());
+		}); 
+		
+		var input = $('input[name="save_code"]');
+        editor.getSession().on("change", function () {
+			input.val(editor.getSession().getValue());
+		});*/
+		
+		var cont = document.getElementById("save_code"); 
+		var code = ace.edit(cont); 
+		code.setTheme("ace/theme/dawn"); 
+		code.getSession().setMode("ace/mode/html");   
+		
+		editor.setValue(code.getValue());
+		
+				
+		var iframe = document.getElementById("result" + t.toString() + "-frame"); 
 		var doc = iframe.contentDocument || iframe.contentWindow.document; 
 		
-            
+        //var ed = ed + editor;    
 		play.onclick = function() {
 			doc.open();
 			doc.write(html_text + "<style>" + editor.getValue() + "<\/style>"); 
 			doc.close();
+		
+		//var code = editor.getValue();
+		code.setValue(editor.getValue());
+		console.log(code.getValue());
+		
+		if(t == 1) {
+			t = 2}
+		else if(t==2){
+			t=1;
+		}
+			turnchange(t);
+			mask(t);
+			move(t);
 		};
 	return(doc);
 	}
@@ -171,4 +199,15 @@ var html_text = '<!DOCTYPE html>\n' +
 		}); 
 	}
 			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
