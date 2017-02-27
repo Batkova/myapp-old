@@ -14,14 +14,6 @@
 	</header>
 	<div class="container" style="width:1300px; height:700px; margin: 0px auto">
 	
-		<a href="#openModal"> Образец </a>
-		<div id="openModal" class="modalDialog">Sample
-			<div class="window1">
-			<a href="#close" title="Закрыть" class="close">X</a>
-                <iframe style="width:360px; height:380px; padding:10px; border:none;" id="sample-frame" frameborder="0" src=""></iframe>
-            </div>
-		</div>
-		
 		<div class="result1">USER 1
 			<div class="window">
                 <iframe id="result1-frame" style="width:380px; height:360px; padding:10px; border:none;"> </iframe>
@@ -33,34 +25,39 @@
 		</div>
 		<div class="result2">USER 2
 			<div class="window">
-                <iframe id="result2-frame" style="width:380px; height:360px; padding:10px; border:none;"> </iframe>
+                <iframe id="result2-frame" style="width:380px; height:360px; padding:10px; border:none; background:#789;"> </iframe>
             </div>
 		</div>
 		<div class="css">CSS
 			<div class="edit" id=editor></div>
 		</div>
 		
-		 <div id="save_code" style="display: none;"> </div>
-		<!--<div id="masked" class="ui-widget-shadow ui-corner-all ui-widget-overlay"></div>-->
-		
 		<div  id="play" class="block  btn btn_play"> <a href="#" > Передать ход </a> </div>
 		
-		<!--<div  id="send" class="block  btn btn_send"> <a href="index2.html" > Передать </a> </div>-->
-			
-		<div  id="icheck" class="block btn btn_check"> <a href="#" onclick="check()"> Проверить </a> </div> 
-			
-		<div id="result_button" class="res"> <a href="#"></a> </div>
+		<div  id="reload" class="block btn"> <a href="" onclick="reload()"> Новая игра </a> </div> 
 		
-		<div  id="reload" class="block btn"> <a href="#" onclick="reload()"> Новая игра </a> </div> 
+			<a href="#openModal"> Образец </a>
+		<div id="openModal" class="modalDialog">Sample
+			<div class="window1">
+			<a href="" title="Закрыть" class="close">X</a>
+                <iframe id="sample-frame" style="width:380px; height:360px; padding:10px; border:none;" ></iframe>
+            </div>
+		</div>
 		
-		<script type="text/javascript" src="jquery-3.1.1.js"></script>
-		<script type="text/javascript" src="d3/d3.js"></script>           
+		<!-- <div  id="icheck" class="block btn btn_check"> <a href="#" onclick="check()"> Проверить </a> </div>  -->
+			
+		<div id="result_button" class="res"> <a href=""></a> </div>
+		
+		
+		
+		<script type="text/javascript" src="d3/d3.js"></script>  
+		
 		<script src="ace-builds/src/ace.js" type="text/javascript" charset="utf-8"> </script>
 		<script src="html2canvas.js" type="text/javascript" charset="utf-8"> </script>
 		<script src="resemble.js" type="text/javascript" charset="utf-8"> </script>
+		
 		<script src="timer.js" type="text/javascript" charset="utf-8"> </script>
 		<script src="main.js" type="text/javascript" charset="utf-8"> </script>
-		<!-- <script src="ace/ext-language_tools.js"></script> -->
 		
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>

@@ -7,25 +7,19 @@ function funcTimer() {
 	function secOut() {
 		if (seconds == 0) { 
 			showMessage(timerId); 
-			if (this.playerIdx === null || this.playerIdx === 1) {
-				this.playerIdx = 0;
-			} else {
-				this.playerIdx += 1;
-			}
-			//this.state.switchPlayer();
 		} else {
 			seconds--; 
+			setTimePage(seconds);
 		  };
-		 
-		setTimePage(seconds);
-		}
-		
-		timerId = setInterval(secOut, 1000);
+		} 
+	timerId = setInterval(secOut, 1000);
+
 }
 
 
+var element = document.getElementById("timer");
+
 function setTimePage(s) { 
-	var element = document.getElementById("timer"); 
 	element.innerHTML = "До окончания хода осталось: "+s; 
 }
 
@@ -34,4 +28,6 @@ function setTimePage(s) {
 function showMessage(timerId) { 
 	alert("Время истекло!");
 	clearInterval(timerId); 
+	
+	element.innerHTML = "";
 }
