@@ -36,6 +36,7 @@
 
     editor.setTheme(config.theme);
     editor.getSession().setMode(config.mode.html);
+	editor.setReadOnly(true);
 
     editor.setValue(defaultCode.html);
 
@@ -53,6 +54,7 @@
 
     editor.setTheme(config.theme);
     editor.getSession().setMode(config.mode.css);
+	editor.setReadOnly(false);
 
     editors.css = editor;
   };
@@ -76,7 +78,6 @@
 
   var doc;
   var applyStyle = function() {
-	
 	doc = this.resultFrame.contentDocument || this.resultFrame.contentWindow.document;
 	
 		doc.open();
@@ -89,6 +90,7 @@
   var saveCode = function() {
     this.style = editors.css.getValue();
   }; 
+  
 
   var restoreCode = function() {
     editors.css.setValue(this.style);
@@ -98,7 +100,7 @@
     style: defaultCode.css,
     resultFrame: document.getElementById('result1-frame'),
     applyStyle: applyStyle,
-    saveCode: saveCode,
+    saveCode: saveCode, 
 	attribute: 0,
     restoreCode: restoreCode
   };
@@ -142,31 +144,39 @@
 		var player = this.getCurrentPlayer();
 		
 		player.resultFrame.style.backgroundColor = config.inactiveColor;
-			
-		player.saveCode();
-		check();
+		
+		var save_style = editors.css.getValue();
+		console.log(save_style);
 		
 		
-		var attr = player.style.replace(/\s/g, "") ;
+		var attr = save_style.replace(/\s/g, "") ;
 		attr = attr.match(/\w+:#?\w+;/gi);
+		console.log(attr);
 		
 		if (attr !== null){
 			if (attr.length === (player.attribute + 1)) {
 				player.attribute = attr.length;
-			} else {
+			/* }  else {
 				alert("Свойство введенно не корректно, либо введено не одно свойство! Попробуйте снова!");
 				
 				if (this.playerIdx === 1) { this.playerIdx = 0;} 
 				else {this.playerIdx += 1;}
-				return;
+				return; */
 			};
-		};
+		};   
+		player.style = save_style;
+		console.log(player.style);
+		player.applyStyle();
+		check();
       };
+	  
 	  
     },
 
     enableCurrentPlayer: function() {
 
+	  funcTimer(); 
+	  
       var player = this.getCurrentPlayer();
 
       player.resultFrame.style.backgroundColor = config.activeColor;
@@ -175,18 +185,30 @@
 
 	  player.restoreCode(player.style);
 	  
+	  var save_style;
 	  editors.css.getSession().on('change', function() {
-		//player.saveCode();
-		player.applyStyle();
+		//save_style = player.save();
+	
+		//player.applyStyle();
 	  });
+	  
 
-	/*   var sec = funcTimer();
-	  if (sec === 0) {return}; */
+	   //var sec = funcTimer();
+	   //console.log(sec);
+	  
 	}
   };
   
   
   
+  //образец
+var sample_frame = document.getElementById('sample-frame');
+var sample_doc = sample_frame.contentDocument || sample_frame.contentWindow.document;
+sample_doc.open();
+sample_doc.write(defaultCode.html);
+sample_doc.close();
+
+injectCss(sample_doc, defaultCode.css);
   
   
   
@@ -194,6 +216,9 @@
 	
 		var load_count; 
 		var sample_image, result_image; 
+		var amount;
+		console.log(sample_doc);
+		console.log(doc);
 		
 		html2canvas(sample_doc.body, { 
 			onrendered: function (s_canvas) { 
@@ -204,31 +229,25 @@
 						result_canvas = r_canvas; 
 						var sample_string = sample_canvas.toDataURL("image/jpeg", 1.0); 
 						var result_string = result_canvas.toDataURL("image/jpeg", 1.0); 
+						
 						resemble(sample_string).compareTo(result_string).onComplete(function (data) { 
-							var amount = Math.floor(100 - data.rawMisMatchPercentage);
+							amount = Math.floor(100 - data.rawMisMatchPercentage);
 							document.getElementById('result_button').innerHTML = amount + ' %'; 
-						}); 
+						});  
 					} 
 				}); 
 			} 
-		}); 
-		return(this.amount);
+		});
+		
+		//return amount;
 	}
 		
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   var attachHandlers = function() {
     document.getElementById('play').addEventListener('click', function(event) {
       event.preventDefault();
+	  clearInterval(timerId); 
       state.switchPlayer();
 	  
     });
@@ -242,22 +261,8 @@
     attachHandlers();
 
 	state.switchPlayer();
-	
-
-
   };
 
-  
-  //образец
-var sample_frame = document.getElementById('sample-frame');
-var sample_doc = sample_frame.contentDocument || sample_frame.contentWindow.document;
-sample_doc.open();
-sample_doc.write(defaultCode.html);
-sample_doc.close();
-
-injectCss(sample_doc, defaultCode.css);
-  
-  
   init();
 
 })(window, document);

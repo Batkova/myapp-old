@@ -1,19 +1,28 @@
+var t = 1;
 
 function funcTimer() {
+	if (t === 0) {
+		console.log('выход');
+		t = 1;
+		editors.css.setReadOnly(true);
+		return;
+	}
+	
 	var seconds = 5; 
 		
 	setTimePage(seconds);
 		
 	function secOut() {
-		if (seconds == 0) { 
+		console.log("func");
+		 if (seconds == 0) { 
 			showMessage(timerId); 
-		} else {
+		} else { 
 			seconds--; 
 			setTimePage(seconds);
-		  };
 		} 
+	} ;
+		
 	timerId = setInterval(secOut, 1000);
-
 }
 
 
@@ -28,6 +37,7 @@ function setTimePage(s) {
 function showMessage(timerId) { 
 	alert("Время истекло!");
 	clearInterval(timerId); 
-	
-	element.innerHTML = "";
+	//element.innerHTML = "";
+	t = 0;
+	funcTimer();
 }
