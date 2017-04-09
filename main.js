@@ -6,8 +6,8 @@
       html: 'ace/mode/html',
       css:  'ace/mode/css'
     },
-    activeColor: '#c0c0c0',
-    inactiveColor: '#789'
+    //activeColor: '#c0c0c0',
+    //inactiveColor: '#789'
   };
 
   var defaultCode = {
@@ -43,8 +43,8 @@
     editors.html = editor;
   };
 
-  var initCssEditor = function() {
-    var container = document.getElementById('editor');
+  var initCssEditor1 = function() {
+    var container = document.getElementById('editor1');
     var editor = ace.edit(container);
 	ace.require("ace/ext/language_tools");
 	
@@ -56,13 +56,27 @@
     editor.getSession().setMode(config.mode.css);
 	editor.setReadOnly(false);
 
-    editors.css = editor;
+    editors.one = editor;
   };
   
   
+    var initCssEditor2 = function() {
+    var container = document.getElementById('editor2');
+    var editor = ace.edit(container);
+	ace.require("ace/ext/language_tools");
+	
+	editor.setOptions({
+		enableBasicAutocompletion: true
+	});
+
+    editor.setTheme(config.theme);
+    editor.getSession().setMode(config.mode.css);
+	editor.setReadOnly(false);
+
+    editors.two = editor;
+  };
   
-
-
+  
   var injectCss = function(doc, cssCode) {
     var style = doc.createElement('style');
     style.type = 'text/css';
@@ -87,16 +101,27 @@
     injectCss(doc, this.style);
   };
 
+
   var saveCode = function() {
-    this.style = editors.css.getValue();
+		if (this.n === 1) {
+		this.style = editors.two.getValue();
+      } else {
+        this.style = editors.one.getValue();
+      }
   }; 
   
 
   var restoreCode = function() {
-    editors.css.setValue(this.style);
+	  console.log(n);
+	  if (n === 1) {
+		editors.two.setValue(this.style);
+      } else {
+        editors.one.setValue(this.style);
+      }
   };
 
   var player1 = {
+	name: document.getElementById('turn1'),
     style: defaultCode.css,
     resultFrame: document.getElementById('result1-frame'),
     applyStyle: applyStyle,
@@ -106,6 +131,7 @@
   };
 
   var player2 = {
+	  name: document.getElementById('turn2'),
     style: defaultCode.css,
     resultFrame: document.getElementById('result2-frame'),
     applyStyle: applyStyle,
@@ -113,11 +139,14 @@
 	attribute: 0,
     restoreCode: restoreCode
   };
+  
+
+
 
   
-  
-  
+  var n;
   var state = {
+	tab_number: null,
     playerIdx: null,
     players: [ player1, player2 ],
     switchPlayer: function() {
@@ -126,8 +155,12 @@
 		 
       if (this.playerIdx === null || this.playerIdx === this.players.length - 1) {
         this.playerIdx = 0;
+		n = this.playerIdx; 
+		tab_number = "one";
       } else {
         this.playerIdx += 1;
+		n = this.playerIdx;
+		tab_number = "two";
       }
 	 
       this.enableCurrentPlayer();
@@ -137,15 +170,23 @@
       return this.players[this.playerIdx];
 	  
     },
+	
+	
 
     disableCurrentPlayer: function() {
 	  
       if (this.playerIdx !== null) {
 		var player = this.getCurrentPlayer();
 		
-		player.resultFrame.style.backgroundColor = config.inactiveColor;
+		 player.name.style.border = '0px';
+	  //player.name.style.box-shadow = 'inset 0 0 30px rgb(255, 105, 105)';
 		
-		var save_style = editors.css.getValue();
+		var save_style;
+		if (n === 1) {
+			save_style = editors.two.getValue();
+		} else {
+			save_style = editors.one.getValue();
+		}
 		console.log(save_style);
 		
 		
@@ -165,7 +206,7 @@
 			};
 		};   
 		player.style = save_style;
-		console.log(player.style);
+		//console.log(player.style);
 		player.applyStyle();
 		check();
       };
@@ -179,18 +220,22 @@
 	  
       var player = this.getCurrentPlayer();
 
-      player.resultFrame.style.backgroundColor = config.activeColor;
+	  player.name.style.border = '2px solid black';
+	 //player.name.style.box-shadow = 'inset 0 0 30px rgb(255, 105, 105)';
 	  
-	  document.getElementById("turn").innerHTML="Ход: Игрок " + (this.playerIdx + 1).toString();
+	  //document.getElementById("turn").innerHTML="Ход: Игрок " + (this.playerIdx + 1).toString();
+	  
+	  //open the active tab
+	  CSSTab(tab_number);
+	  ResTab(tab_number);
 
 	  player.restoreCode(player.style);
 	  
-	  var save_style;
-	  editors.css.getSession().on('change', function() {
-		//save_style = player.save();
+	  /* editors.one.getSession().on('change', function() {
+		save_style = player.save();
 	
-		//player.applyStyle();
-	  });
+		player.applyStyle();
+	  }); */
 	  
 
 	   //var sec = funcTimer();
@@ -198,6 +243,10 @@
 	  
 	}
   };
+  
+  
+  
+  
   
   
   
@@ -217,8 +266,6 @@ injectCss(sample_doc, defaultCode.css);
 		var load_count; 
 		var sample_image, result_image; 
 		var amount;
-		console.log(sample_doc);
-		console.log(doc);
 		
 		html2canvas(sample_doc.body, { 
 			onrendered: function (s_canvas) { 
@@ -256,7 +303,8 @@ injectCss(sample_doc, defaultCode.css);
 
   var init = function() {
     initHtmlEditor();
-    initCssEditor();
+    initCssEditor1();
+	initCssEditor2();
 
     attachHandlers();
 
